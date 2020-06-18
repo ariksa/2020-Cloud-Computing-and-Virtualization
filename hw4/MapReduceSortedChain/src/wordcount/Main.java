@@ -50,9 +50,11 @@ public class Main extends Configured implements Tool {
 
 // ----------- SECOND JOB -----------
             System.out.println("-------SECOND JOB-------");
+            conf = new Configuration();
             Job filterJob = Job.getInstance(conf);
             filterJob.setJobName("Filter");
 
+            filterJob.setJarByClass(Main.class);
             FileInputFormat.setInputPaths(filterJob, tempDir);
             FileOutputFormat.setOutputPath(filterJob, new Path("data/output"));
 
@@ -63,7 +65,7 @@ public class Main extends Configured implements Tool {
             filterJob.setMapperClass(MapSort.class);
             filterJob.setReducerClass(ReduceSort.class);
 
-            return filterJob.waitForCompletion(false) ? 0 : 1;
+            return filterJob.waitForCompletion(true) ? 0 : 1;
 
         } finally {
             FileSystem.get(conf).delete(tempDir, true);
